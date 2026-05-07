@@ -33,6 +33,7 @@ let storedVal = null;
 let operatorVal = null;
 let inputVal = [];
 
+
 // Query selectors 
 const inputDisplay = document.querySelector(".inputDisplay");
 const operatorDisplay = document.querySelector(".operatorDisplay");
@@ -49,17 +50,18 @@ for (let button of buttons) {
 }
 
 
-// Press functions 
+// Press button functions 
 function pressed(button){
     const buttonVal = button.textContent; 
 
     if (buttonVal == "C") {
         clear();
+
     }
 
     else {
         if (isNaN(buttonVal)) {
-            if (storedVal == null) {
+            if (storedVal == null && inputVal != []) {
                 storedVal = Number(inputVal.join(""));
                 storedDisplay.textContent = storedVal;
                 inputVal = [];
@@ -75,6 +77,10 @@ function pressed(button){
         }
 
         else {
+            if (operatorVal == null) {
+                storedVal = null;
+                storedDisplay.textContent = storedVal;
+            }
             inputVal.push(Number(buttonVal)); 
             inputDisplay.textContent = Number(inputVal.join(""));
         }
