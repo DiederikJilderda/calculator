@@ -1,57 +1,44 @@
-function addition(input) {
-    operatorDisplay.textContent = input; 
-    console.log(input);
-}
-
-function subtraction(input) {
-    operatorDisplay.textContent = input; 
-    console.log(input);
-}
-
-function multiplication(input) {
-    operatorDisplay.textContent = input; 
-    console.log(input);
-}
-
-function division(input) {
-    operatorDisplay.textContent = input; 
-    console.log(input);
-}
-
-function operator(input) {
-    operatorDisplay.textContent = input; 
-    console.log(input);
+function operator(buttonVal) {
+    operatorVal = buttonVal;
+    operatorDisplay.textContent = operatorVal; 
 }
 
 function clear() {
-    storedVal = ""; 
-    operatorVal = "";
+    storedVal = null; 
+    operatorVal = null;
     inputVal = [];
     storedDisplay.textContent = storedVal;
     operatorDisplay.textContent = operatorVal;
     inputDisplay.textContent = inputVal;
 }
 
-function calculate() {
-    return 
+function calculate(storedVal, operatorVal, inputVal) {
+    storedVal = Number(storedVal);
+    inputVal = Number(inputVal.join(""));
+
+    if (operatorVal == "+") {
+        storedVal += inputVal; 
+    }
+
+    operatorVal = null;
+    inputVal = [];
+    storedDisplay.textContent = storedVal;
+    operatorDisplay.textContent = operatorVal;
+    inputDisplay.textContent = inputVal;
 }
 
 
 // Initialise calculator
-// let displayVal = ""; 
-let storedVal = "";
-let operatorVal = "";
+let storedVal = null;
+let operatorVal = null;
 let inputVal = [];
 
-
+// Query selectors 
 const inputDisplay = document.querySelector(".inputDisplay");
 const operatorDisplay = document.querySelector(".operatorDisplay");
-let storedDisplay = document.querySelector(".storedDisplay");
-
-// inputDisplay.textContent = displayVal; 
-
-
+const storedDisplay = document.querySelector(".storedDisplay");
 const buttons = document.querySelectorAll(".button");
+
 
 // Press button animations 
 for (let button of buttons) {
@@ -64,31 +51,33 @@ for (let button of buttons) {
 
 // Press functions 
 function pressed(button){
-    const input = button.textContent; 
+    const buttonVal = button.textContent; 
 
-    if (isNaN(input)) {
-        if (storedVal == "") {
-            storedVal = inputVal.join("");
-            inputVal = [];
-            inputDisplay.textContent = inputVal;
-            storedDisplay.textContent = storedVal;
-        }
-
-        if (input == "=") {
-            calculate(storedVal, inputVal);
-        }
-        else if (input == "C") {
-            clear();
-        }
-        else {
-            operator(input);
-        }
-
+    if (buttonVal == "C") {
+        clear();
     }
+
     else {
-        inputVal.push(input); 
-        inputDisplay.textContent = inputVal.join("");
-        console.log(input);
+        if (isNaN(buttonVal)) {
+            if (storedVal == null) {
+                storedVal = Number(inputVal.join(""));
+                storedDisplay.textContent = storedVal;
+                inputVal = [];
+                inputDisplay.textContent = inputVal;
+            }
+
+            if (buttonVal == "=") {
+                calculate(storedVal, operatorVal, inputVal);
+            }
+            else {
+                operator(buttonVal);
+            }
+        }
+
+        else {
+            inputVal.push(Number(buttonVal)); 
+            inputDisplay.textContent = Number(inputVal.join(""));
+        }
     }
 }
 
