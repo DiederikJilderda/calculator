@@ -1,25 +1,73 @@
+//// NOTES //// 
+
+
+// [ ]  fix bug when overriding operators 
+// [ ]  add decimal option 
+// [ ]  add keyboard support 
+
+
+
+
+//// FUNCTIONS //// 
+
+
+// Display operator symbol 
 function operator(buttonVal) {
     operatorVal = buttonVal;
     operatorDisplay.textContent = operatorVal; 
 }
 
+
+// Clear display in steps: input value, then operator, then stored value 
 function clear() {
-    storedVal = null; 
-    operatorVal = null;
-    inputVal = [];
-    storedDisplay.textContent = storedVal;
-    operatorDisplay.textContent = operatorVal;
-    inputDisplay.textContent = inputVal;
+    if (inputVal.length > 0) {
+        inputVal.pop();
+        inputDisplay.textContent = Number(inputVal.join(""));
+    }
+    else if (inputVal.length == 0 && operatorVal != null) {
+        inputVal = [];
+        inputDisplay.textContent = null;
+        operatorVal = null;
+        operatorDisplay.textContent = operatorVal;        
+    }
+    else {
+        storedVal = null;
+        storedDisplay.textContent = storedVal;
+    }
 }
 
-function calculate(storedVal, operatorVal, inputVal) {
+
+// Calculate stored value and input value with operator 
+function calculate() {
     storedVal = Number(storedVal);
     inputVal = Number(inputVal.join(""));
+
 
     if (operatorVal == "+") {
         storedVal += inputVal; 
     }
 
+
+    if (operatorVal == "-") {
+        storedVal -= inputVal; 
+    }
+
+
+    if (operatorVal == "x") {
+        storedVal *= inputVal; 
+    }
+
+
+    if (operatorVal == ":") {
+        if (inputVal == 0 || inputVal == null) {
+            alert("Please don't divide by zero");
+        }
+        else {
+            storedVal /= inputVal;
+        } 
+    }
+
+
     operatorVal = null;
     inputVal = [];
     storedDisplay.textContent = storedVal;
@@ -28,36 +76,15 @@ function calculate(storedVal, operatorVal, inputVal) {
 }
 
 
-// Initialise calculator
-let storedVal = null;
-let operatorVal = null;
-let inputVal = [];
-
-
-// Query selectors 
-const inputDisplay = document.querySelector(".inputDisplay");
-const operatorDisplay = document.querySelector(".operatorDisplay");
-const storedDisplay = document.querySelector(".storedDisplay");
-const buttons = document.querySelectorAll(".button");
-
-
-// Press button animations 
-for (let button of buttons) {
-    button.classList.add("unpressed");
-    button.addEventListener("mousedown", () => button.classList.remove("unpressed"));
-    button.addEventListener("mouseup", () => button.classList.add("unpressed"));
-    button.addEventListener("mouseleave", () => button.classList.add("unpressed"));
-}
-
-
-// Press button functions 
+// Press button function 
 function pressed(button){
     const buttonVal = button.textContent; 
 
+
     if (buttonVal == "C") {
         clear();
-
     }
+
 
     else {
         if (isNaN(buttonVal)) {
@@ -67,14 +94,19 @@ function pressed(button){
                 inputVal = [];
                 inputDisplay.textContent = inputVal;
             }
+            else if (storedVal != null && inputVal != []) {
+                calculate();
+            }
+
 
             if (buttonVal == "=") {
-                calculate(storedVal, operatorVal, inputVal);
+                calculate();
             }
             else {
                 operator(buttonVal);
             }
         }
+
 
         else {
             if (operatorVal == null) {
@@ -87,6 +119,47 @@ function pressed(button){
     }
 }
 
+
+
+
+//// INITIALISATION ////
+
+
+// Initialise calculator values 
+let storedVal = null;
+let operatorVal = null;
+let inputVal = [];
+
+
+
+
+//// EVENT LISTENERS //// 
+
+
+// Document element identifiers  
+const inputDisplay = document.querySelector(".inputDisplay");
+const operatorDisplay = document.querySelector(".operatorDisplay");
+const storedDisplay = document.querySelector(".storedDisplay");
+const buttons = document.querySelectorAll(".button");
+
+
+
+
+// Button press animation 
+for (let button of buttons) {
+    button.classList.add("unpressed");
+    button.addEventListener("mousedown", () => button.classList.remove("unpressed"));
+    button.addEventListener("mouseup", () => button.classList.add("unpressed"));
+    button.addEventListener("mouseleave", () => button.classList.add("unpressed"));
+}
+
+
+
+
+// Eventlisteners for button click 
 for (let button of buttons) {
     button.addEventListener("mouseup", () => pressed(button));
 }
+
+
+// Eventlisteners for keyboard press 

@@ -3,10 +3,12 @@
     font-size: 24px;
 }
 
+
 body {
     display: flex;
     justify-content: center;
 }
+
 
 .calculator {
     margin: 96px;
@@ -23,6 +25,7 @@ body {
     border-radius: 10px;
 }
 
+
 .displayContainer {
     display: flex;
     justify-content: center;
@@ -36,6 +39,7 @@ body {
     background-color: white;
 }
 
+
 .display {
     display: flex;
     justify-content: flex-end;
@@ -47,6 +51,7 @@ body {
     gap: 8px;
 }
 
+
 .buttonRow {
     display: flex; 
     flex-direction: row;
@@ -54,9 +59,11 @@ body {
     gap: 16px;
 }
 
+
 .unpressed {
     box-shadow: 4px 4px 2px rgb(100 100 100);
 }
+
 
 .button {
     display: flex; 
@@ -68,4 +75,5 @@ body {
     border-width: 1px;
     border-radius: 4px;
     background-color: grey;
+    cursor: pointer;
 }
