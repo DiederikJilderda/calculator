@@ -18,8 +18,18 @@ function division(input) {
     console.log(input);
 }
 
+function operator(input) {
+    operatorDisplay.textContent = input; 
+    console.log(input);
+}
+
 function clear() {
-    return 
+    storedVal = ""; 
+    operatorVal = "";
+    inputVal = [];
+    storedDisplay.textContent = storedVal;
+    operatorDisplay.textContent = operatorVal;
+    inputDisplay.textContent = inputVal;
 }
 
 function calculate() {
@@ -64,24 +74,16 @@ function pressed(button){
             storedDisplay.textContent = storedVal;
         }
 
-        if (input == "+") {
-            addition(input);
-        }
-        else if (input == "-") {
-            subtraction(input);
-        }
-        else if (input == "x") {
-            multiplication(input);
-        }
-        else if (input == ":") {
-            division(input);
+        if (input == "=") {
+            calculate(storedVal, inputVal);
         }
         else if (input == "C") {
             clear();
         }
-        else if (input == "=") {
-            calculate(storedVal, inputVal);
+        else {
+            operator(input);
         }
+
     }
     else {
         inputVal.push(input); 
