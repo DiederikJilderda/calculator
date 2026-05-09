@@ -1,15 +1,12 @@
-//// NOTES //// 
-
-
-// [ ]  fix bug when overriding operators 
-// [ ]  add decimal option 
-// [ ]  add keyboard support 
-
-
-
+//// BUGS //// 
+// 0.8 - 0.7 = 0.10000000000000009 ??? 
+// 0.8 - 0.1 = 0.70000000000000001 ??? 
+// 0.8 / 0.1 = 8 
+// 0.8 * 0.1 = 0.08000000000000002 ??? 
+// 0.7 - 0.1 = 0.6 
+// 0.2 ^ 3   = 0.008000000000000002 ??? 
 
 //// FUNCTIONS //// 
-
 
 // Display operator symbol 
 function operator(buttonVal) {
@@ -17,16 +14,14 @@ function operator(buttonVal) {
     operatorDisplay.textContent = operatorVal; 
 }
 
-
-// Clear display in steps: input value, then operator, then stored value 
+// Clear display in steps: input values, then operator, then full stored value 
 function clear() {
     if (inputVal.length > 0) {
         inputVal.pop();
-        inputDisplay.textContent = Number(inputVal.join(""));
+        inputDisplay.textContent = inputVal.join("");
     }
-    else if (inputVal.length == 0 && operatorVal != null) {
+    else if (inputVal.length === 0 && operatorVal != null) {
         inputVal = [];
-        inputDisplay.textContent = null;
         operatorVal = null;
         operatorDisplay.textContent = operatorVal;        
     }
@@ -36,38 +31,41 @@ function clear() {
     }
 }
 
+// Clear full display  
+function allClear() {
+    inputVal = [];
+    operatorVal = null;
+    storedVal = null;
+
+    inputDisplay.textContent = inputVal.join("");
+    operatorDisplay.textContent = operatorVal;        
+    storedDisplay.textContent = storedVal;
+}
 
 // Calculate stored value and input value with operator 
 function calculate() {
+    // Convert inputs to numbers 
     storedVal = Number(storedVal);
     inputVal = Number(inputVal.join(""));
 
-
-    if (operatorVal == "+") {
-        storedVal += inputVal; 
-    }
-
-
-    if (operatorVal == "-") {
-        storedVal -= inputVal; 
-    }
-
-
-    if (operatorVal == "x") {
-        storedVal *= inputVal; 
-    }
-
-
-    if (operatorVal == ":") {
-        if (inputVal == 0 || inputVal == null) {
+    // Calculations return the new stored value 
+    if (operatorVal === "+") {
+        storedVal += inputVal;}
+    if (operatorVal === "-") {
+        storedVal -= inputVal; }
+    if (operatorVal === "x") {
+        storedVal *= inputVal; }
+    if (operatorVal === "^") {
+        storedVal = storedVal ** inputVal; }
+    if (operatorVal === "/") {
+        if (inputVal === 0 || inputVal === null) {
             alert("Please don't divide by zero");
         }
         else {
             storedVal /= inputVal;
-        } 
-    }
+        }}
 
-
+    // Clear display except stored value 
     operatorVal = null;
     inputVal = [];
     storedDisplay.textContent = storedVal;
@@ -75,55 +73,57 @@ function calculate() {
     inputDisplay.textContent = inputVal;
 }
 
-
 // Press button function 
 function pressed(button){
     const buttonVal = button.textContent; 
 
-
-    if (buttonVal == "C") {
-        clear();
-    }
-
-
+    // If special button:   
+    if (buttonVal === "d") {
+        clear();}
+    else if (buttonVal === "c") {
+        allClear();}
+    else if (buttonVal === "=") {
+        calculate();}
+    // If other button: 
     else {
-        if (isNaN(buttonVal)) {
-            if (storedVal == null && inputVal != []) {
+        // If button is operator either: 
+        if (isNaN(buttonVal) && buttonVal != ".") {
+            // Calculate result if both input and stored values are present 
+            if (inputVal.length != 0 && storedVal != null) {
+                calculate();
+            }
+            // Push input to stored value if stored is empty 
+            else if (inputVal.length != 0 && storedVal === null) {
                 storedVal = Number(inputVal.join(""));
-                storedDisplay.textContent = storedVal;
                 inputVal = [];
-                inputDisplay.textContent = inputVal;
+                storedDisplay.textContent = storedVal;
+                inputDisplay.textContent = inputVal; 
             }
-            else if (storedVal != null && inputVal != []) {
-                calculate();
-            }
-
-
-            if (buttonVal == "=") {
-                calculate();
-            }
-            else {
-                operator(buttonVal);
-            }
+            operator(buttonVal);
         }
 
-
+        // If button is number or .
         else {
-            if (operatorVal == null) {
-                storedVal = null;
+            // Clear stored value if no operator is present 
+            if (storedVal != null && operatorVal === null) {
+                storedVal = null; 
                 storedDisplay.textContent = storedVal;
             }
-            inputVal.push(Number(buttonVal)); 
-            inputDisplay.textContent = Number(inputVal.join(""));
+
+            // Append input to display 
+            if (buttonVal === "." && inputVal.includes(".")) {
+                    return
+                }
+            else {
+                inputVal.push(buttonVal); 
+                inputDisplay.textContent = inputVal.join("");
+            }
         }
     }
 }
 
 
-
-
 //// INITIALISATION ////
-
 
 // Initialise calculator values 
 let storedVal = null;
@@ -131,35 +131,34 @@ let operatorVal = null;
 let inputVal = [];
 
 
-
-
 //// EVENT LISTENERS //// 
-
 
 // Document element identifiers  
 const inputDisplay = document.querySelector(".inputDisplay");
 const operatorDisplay = document.querySelector(".operatorDisplay");
 const storedDisplay = document.querySelector(".storedDisplay");
-const buttons = document.querySelectorAll(".button");
+const buttons = document.querySelectorAll(".button", ".longButton");
 
 
-
-
-// Button press animation 
+// Button event listeners  
 for (let button of buttons) {
+    // Mouse events 
     button.classList.add("unpressed");
     button.addEventListener("mousedown", () => button.classList.remove("unpressed"));
-    button.addEventListener("mouseup", () => button.classList.add("unpressed"));
     button.addEventListener("mouseleave", () => button.classList.add("unpressed"));
-}
-
-
-
-
-// Eventlisteners for button click 
-for (let button of buttons) {
+    button.addEventListener("mouseup", () => button.classList.add("unpressed"));
     button.addEventListener("mouseup", () => pressed(button));
+
+    // Keyboard events 
+    document.addEventListener("keydown", (event) => {
+        if (event.key === button.textContent) {
+            button.classList.remove("unpressed");
+        }
+    })
+    document.addEventListener("keyup", (event) => {
+        if (event.key === button.textContent) {
+            button.classList.add("unpressed");
+            pressed(button);
+        }
+    })
 }
-
-
-// Eventlisteners for keyboard press 

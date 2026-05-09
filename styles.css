@@ -3,18 +3,17 @@
     font-size: 24px;
 }
 
-
 body {
     display: flex;
     justify-content: center;
 }
-
 
 .calculator {
     margin: 96px;
     background-color: lightgray;
     width: 368px; 
     height: 448px;
+    height: 528px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,7 +23,6 @@ body {
     border-width: 3px;
     border-radius: 10px;
 }
-
 
 .displayContainer {
     display: flex;
@@ -39,7 +37,6 @@ body {
     background-color: white;
 }
 
-
 .display {
     display: flex;
     justify-content: flex-end;
@@ -51,7 +48,6 @@ body {
     gap: 8px;
 }
 
-
 .buttonRow {
     display: flex; 
     flex-direction: row;
@@ -59,11 +55,9 @@ body {
     gap: 16px;
 }
 
-
 .unpressed {
     box-shadow: 4px 4px 2px rgb(100 100 100);
 }
-
 
 .button {
     display: flex; 
@@ -76,4 +70,27 @@ body {
     border-radius: 4px;
     background-color: grey;
     cursor: pointer;
+}
+
+.longButton {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    width: 144px;
+    border: solid black;
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: grey;
+    cursor: pointer;
+}
+
+.invisibleButton {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    width: 64px;
+    border-width: 1px;
+    border-radius: 4px;
 }
